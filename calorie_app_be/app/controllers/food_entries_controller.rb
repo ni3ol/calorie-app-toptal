@@ -1,4 +1,6 @@
 class FoodEntriesController < ApplicationController
+  skip_before_action :verify_authenticity_token
+
   def index
     render json: {
       food_entries: food_entries
@@ -14,7 +16,7 @@ class FoodEntriesController < ApplicationController
   private
 
   def food_entry_params
-    params.permit(:name, :age)
+    params.require(:params).permit(:name, :user_id, :consumed_at, :calories, :price)
   end
 
   def food_entries

@@ -6,7 +6,7 @@ export const createFoodEntry = async ({
   consumedAt,
   price,
 }) => {
-  const response = await Axios.post("/food_entries", {
+  const response = await Axios.post("http://localhost:3000/food_entries", {
     params: {
       name,
       calories,
@@ -14,7 +14,6 @@ export const createFoodEntry = async ({
       price,
     },
     headers: {
-      "Access-Control-Allow-Origin": "*",
       "Content-Type": "application/json",
     },
   });
