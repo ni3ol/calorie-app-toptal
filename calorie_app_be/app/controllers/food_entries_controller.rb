@@ -6,18 +6,16 @@ class FoodEntriesController < ApplicationController
   end
 
   def create
-    Food.create!(
-      user_id: params[:user_id],
-      name: params[:name],
-      consumed_at: params[:consumed_at],
-      calories: params[:calories],
-      price: params[:price]
-    )
+    FoodEntry.create!(food_entry_params)
 
     render json: { message: 'success' }
   end
 
   private
+
+  def food_entry_params
+    params.permit(:name, :age)
+  end
 
   def food_entries
     food_entry = params[:user_id] ? FoodEntry.where(user_id: params[:user_id]) : FoodEntry.all
