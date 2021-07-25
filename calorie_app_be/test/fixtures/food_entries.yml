@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  name: MyString
+  user_id: 1
+  consumed_at: 2021-07-25 20:39:43
+  calories: 1
+  price: 1
+
+two:
+  name: MyString
+  user_id: 1
+  consumed_at: 2021-07-25 20:39:43
+  calories: 1
+  price: 1

@@ -1,0 +1,2 @@
+class FoodEntry < ApplicationRecord
+end
