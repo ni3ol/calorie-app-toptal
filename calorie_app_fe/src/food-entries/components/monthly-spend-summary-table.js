@@ -2,6 +2,7 @@ import React from "react";
 import { Table } from "semantic-ui-react";
 
 export const MonthlySpendSummaryTable = ({ entry }) => {
+  const spendExceeded = entry.monthlySpendAmount > entry.monthlySpendLimit
   return (
     <Table celled>
       <Table.Header>
@@ -18,8 +19,8 @@ export const MonthlySpendSummaryTable = ({ entry }) => {
           <Table.Cell>{entry.month}</Table.Cell>
           <Table.Cell>{entry.monthlySpendLimit}</Table.Cell>
           <Table.Cell>{entry.monthlySpendAmount}</Table.Cell>
-          <Table.Cell>
-            {entry.spendAmount > entry.monthlySpendLimit ? "Yes" : "No"}
+          <Table.Cell negative={spendExceeded} positive={!spendExceeded}>
+            {spendExceeded ? "Yes" : "No"}
           </Table.Cell>
         </Table.Row>
       </Table.Body>

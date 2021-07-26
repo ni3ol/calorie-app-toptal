@@ -1,12 +1,28 @@
 import React, { useState } from "react";
 import { Table, Menu, Icon, Button, Form } from "semantic-ui-react";
 import { format } from "date-fns";
+import { updateFoodEntry } from "../actions/update-food-entry";
+import { usePromiseLazy } from "src/utils";
 
-const GetOrSetPrice = () => {
+const GetOrSetPrice = (foodEntryId, entryPrice) => {
   const [formVisible, setFormVisible] = useState(false);
-  const [price, setPrice] = useState();
+  const [price, setPrice] = useState(entryPrice);
 
-  const handleSubmit = () => {
+  const {
+    execute: wrappedUpdateFoodEntry,
+    error,
+    isLoading,
+  } = usePromiseLazy(async () => {
+    const updatedFoodEntry = await updateFoodEntry({
+      foodEntryId,
+      price
+    });
+
+    return updatedFoodEntry;
+  }, []);
+
+  const handleSubmit = async () => {
+    const { result: foodEntry } = await wrappedUpdateFoodEntry();
     setFormVisible(false);
   };
 
@@ -56,7 +72,7 @@ export const FoodEntryTable = ({ isAdmin, entries, onEditClick }) => {
             <Table.Cell>
               {format(new Date(entry.consumedAt), "PPpp")}
             </Table.Cell>
-            <Table.Cell>{GetOrSetPrice()}</Table.Cell>
+            <Table.Cell>{GetOrSetPrice(entry.id, entry.price)}</Table.Cell>
             {isAdmin && <Table.Cell>{entry.userId}</Table.Cell>}
             {/* <Table.Cell textAlign="right">
               <Button primary basic onClick={() => onEditClick(entry.id)}>

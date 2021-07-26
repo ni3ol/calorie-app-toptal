@@ -14,16 +14,19 @@ export const DailySummaryTable = ({ entries }) => {
       </Table.Header>
 
       <Table.Body>
-        {entries.map((entry, index) => (
-          <Table.Row key={index}>
-            <Table.Cell>{entry.createdAt}</Table.Cell>
-            <Table.Cell>{entry.calorieLimit}</Table.Cell>
-            <Table.Cell>{entry.calorieAmount}</Table.Cell>
-            <Table.Cell>
-              {entry.calorieAmount > entry.calorieLimit ? "Yes" : "No"}
-            </Table.Cell>
-          </Table.Row>
-        ))}
+        {entries.map((entry, index) => {
+          const limitExceeded = entry.calorieAmount > entry.calorieLimit
+          return (
+            <Table.Row key={index}>
+              <Table.Cell>{entry.createdAt}</Table.Cell>
+              <Table.Cell>{entry.calorieLimit}</Table.Cell>
+              <Table.Cell>{entry.calorieAmount}</Table.Cell>
+              <Table.Cell negative={limitExceeded} positive={!limitExceeded}>
+                {limitExceeded ? "Yes" : "No"}
+              </Table.Cell>
+            </Table.Row>
+          );
+        })}
       </Table.Body>
     </Table>
   );
