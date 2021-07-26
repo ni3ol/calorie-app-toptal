@@ -3,4 +3,5 @@ Rails.application.routes.draw do
   resources :user_limits, only: [:index]
   resources :food_entries, only: [:index, :create]
   resources :admin_food_statistics, only: [:index]
+  resources :user_monthly_spend, only: [:index]
 end

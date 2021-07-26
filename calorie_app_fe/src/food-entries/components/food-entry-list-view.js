@@ -6,8 +6,10 @@ import { getUser } from "src/users/actions/get-user";
 import { usePromise } from "src/utils";
 import { getCalorieLimit } from "../actions/get-calorie-limit";
 import { getFoodEntries } from "../actions/get-food-entries";
+import { getMonthlySpendSummary } from "../actions/get-monthly-spend-summary";
 import { DailySummaryTable } from "./daily-summary-table";
 import { FoodEntryTable } from "./food-entry-table";
+import { MonthlySpendSummaryTable } from "./monthly-spend-summary-table";
 import { NewFoodEntryModal } from "./new-food-entry-modal";
 import { UpdateFoodEntryModal } from "./update-food-entry-modal";
 
@@ -34,6 +36,13 @@ export const FoodEntryListView = () => {
     const calorieLimit = await getCalorieLimit();
     return calorieLimit;
   }, []);
+
+  const { result: monthlySpendSummary } = usePromise(async () => {
+    const monthlySpendSummary = await getMonthlySpendSummary();
+    return monthlySpendSummary;
+  }, []);
+
+  console.log('ssss', monthlySpendSummary)
 
   const foodEntryToUpdate = foodEntries?.find(
     (foodEntry) => foodEntry.id === foodEntryIdToUpdate
@@ -80,13 +89,21 @@ export const FoodEntryListView = () => {
             setFoodEntryIdToUpdate(foodEntryId);
           }}
         />
+
+        <Grid columns={2}>
+          <Grid.Column verticalAlign="middle">
+            <Header>Monthly summary</Header>
+          </Grid.Column>
+        </Grid>
+        <MonthlySpendSummaryTable entry={monthlySpendSummary || []}/>
+
         <Grid columns={2}>
           <Grid.Column verticalAlign="middle">
             <Header>Daily summaries</Header>
           </Grid.Column>
         </Grid>
         <p>
-          Calorie limit: <b>{calorieLimit}</b> - Edit
+          Calorie limit: <b>{calorieLimit}</b>
         </p>
         <DailySummaryTable entries={dailySummaries || []} />
       </Container>

@@ -1,6 +1,36 @@
-import React from "react";
-import { Table, Menu, Icon, Button } from "semantic-ui-react";
-import { format } from 'date-fns'
+import React, { useState } from "react";
+import { Table, Menu, Icon, Button, Form } from "semantic-ui-react";
+import { format } from "date-fns";
+
+const GetOrSetPrice = () => {
+  const [formVisible, setFormVisible] = useState(false);
+  const [price, setPrice] = useState();
+
+  const handleSubmit = () => {
+    setFormVisible(false);
+  };
+
+  return formVisible ? (
+    <Form onSubmit={handleSubmit}>
+      <Form.Input
+        label="Price"
+        placeholder="100"
+        value={price}
+        onChange={(e) => setPrice(e.target.value)}
+      />
+      <Form.Button primary type="submit">
+        {price ? "Edit" : "Set"} price
+      </Form.Button>
+    </Form>
+  ) : (
+    <>
+      {price && price}
+      <Button floated="right" onClick={() => setFormVisible(true)}>
+        {price ? "Edit" : "Set"} Price
+      </Button>
+    </>
+  );
+};
 
 export const FoodEntryTable = ({ isAdmin, entries, onEditClick }) => {
   return (
@@ -20,11 +50,13 @@ export const FoodEntryTable = ({ isAdmin, entries, onEditClick }) => {
       <Table.Body>
         {entries.map((entry, index) => (
           <Table.Row key={index}>
-            <Table.Cell>{format(new Date(entry.createdAt), 'PPpp')}</Table.Cell>
+            <Table.Cell>{format(new Date(entry.createdAt), "PPpp")}</Table.Cell>
             <Table.Cell>{entry.name}</Table.Cell>
             <Table.Cell>{entry.calories}</Table.Cell>
-            <Table.Cell>{format(new Date(entry.consumedAt), 'PPpp')}</Table.Cell>
-            <Table.Cell>{entry.price}</Table.Cell>
+            <Table.Cell>
+              {format(new Date(entry.consumedAt), "PPpp")}
+            </Table.Cell>
+            <Table.Cell>{GetOrSetPrice()}</Table.Cell>
             {isAdmin && <Table.Cell>{entry.userId}</Table.Cell>}
             {/* <Table.Cell textAlign="right">
               <Button primary basic onClick={() => onEditClick(entry.id)}>
