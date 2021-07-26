@@ -1,5 +1,6 @@
 import React from "react";
 import { Table, Menu, Icon, Button } from "semantic-ui-react";
+import { format } from 'date-fns'
 
 export const FoodEntryTable = ({ isAdmin, entries, onEditClick }) => {
   return (
@@ -12,27 +13,27 @@ export const FoodEntryTable = ({ isAdmin, entries, onEditClick }) => {
           <Table.HeaderCell>Consumed at</Table.HeaderCell>
           <Table.HeaderCell>Price</Table.HeaderCell>
           {isAdmin && <Table.HeaderCell>User ID</Table.HeaderCell>}
-          <Table.HeaderCell>Actions</Table.HeaderCell>
+          {/* <Table.HeaderCell>Actions</Table.HeaderCell> */}
         </Table.Row>
       </Table.Header>
 
       <Table.Body>
         {entries.map((entry, index) => (
           <Table.Row key={index}>
-            <Table.Cell>{entry.createdAt}</Table.Cell>
+            <Table.Cell>{format(new Date(entry.createdAt), 'PPpp')}</Table.Cell>
             <Table.Cell>{entry.name}</Table.Cell>
             <Table.Cell>{entry.calories}</Table.Cell>
-            <Table.Cell>{entry.consumedAt}</Table.Cell>
+            <Table.Cell>{format(new Date(entry.consumedAt), 'PPpp')}</Table.Cell>
             <Table.Cell>{entry.price}</Table.Cell>
             {isAdmin && <Table.Cell>{entry.userId}</Table.Cell>}
-            <Table.Cell textAlign="right">
+            {/* <Table.Cell textAlign="right">
               <Button primary basic onClick={() => onEditClick(entry.id)}>
                 Edit
               </Button>
               <Button color="red" basic>
                 Delete
               </Button>
-            </Table.Cell>
+            </Table.Cell> */}
           </Table.Row>
         ))}
       </Table.Body>

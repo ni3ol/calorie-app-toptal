@@ -4,6 +4,7 @@ import { Button, Container, Grid, Header, Segment } from "semantic-ui-react";
 import { getDailySummaries } from "src/daily-summaries/actions/get-daily-summaries";
 import { getUser } from "src/users/actions/get-user";
 import { usePromise } from "src/utils";
+import { getCalorieLimit } from "../actions/get-calorie-limit";
 import { getFoodEntries } from "../actions/get-food-entries";
 import { DailySummaryTable } from "./daily-summary-table";
 import { FoodEntryTable } from "./food-entry-table";
@@ -27,6 +28,11 @@ export const FoodEntryListView = () => {
   const { result: foodEntries, execute } = usePromise(async () => {
     const foodEntries = await getFoodEntries();
     return foodEntries;
+  }, []);
+
+  const { result: calorieLimit } = usePromise(async () => {
+    const calorieLimit = await getCalorieLimit();
+    return calorieLimit;
   }, []);
 
   const foodEntryToUpdate = foodEntries?.find(
@@ -80,7 +86,7 @@ export const FoodEntryListView = () => {
           </Grid.Column>
         </Grid>
         <p>
-          Calorie limit: <b>2100</b> - Edit
+          Calorie limit: <b>{calorieLimit}</b> - Edit
         </p>
         <DailySummaryTable entries={dailySummaries || []} />
       </Container>

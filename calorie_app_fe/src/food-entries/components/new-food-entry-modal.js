@@ -1,13 +1,14 @@
 import React, { useState } from "react";
-import { Button, Modal, Form, Message } from "semantic-ui-react";
+import { Modal, Form, Message } from "semantic-ui-react";
 import { usePromiseLazy } from "src/utils";
 import { createFoodEntry } from "../actions/create-food-entry";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 export const NewFoodEntryModal = ({ onClose, onFoodEntryCreated }) => {
   const [name, setName] = useState();
   const [calories, setCalories] = useState();
-  const [consumedAt, setConsumedAt] = useState();
-  const [price, setPrice] = useState();
+  const [consumedAt, setConsumedAt] = useState(new Date());
 
   const {
     execute: wrappedCreateFoodEntry,
@@ -18,7 +19,6 @@ export const NewFoodEntryModal = ({ onClose, onFoodEntryCreated }) => {
       name,
       calories,
       consumedAt,
-      price: Number.parseFloat(price),
     });
 
     return newFoodEntry;
@@ -52,16 +52,16 @@ export const NewFoodEntryModal = ({ onClose, onFoodEntryCreated }) => {
             placeholder="100"
             onChange={(e) => setCalories(e.target.value)}
           />
-          <Form.Input
-            label="Consumed at"
-            placeholder="2021/08/21"
-            onChange={(e) => setConsumedAt(e.target.value)}
-          />
-          <Form.Input
-            label="Price"
-            placeholder="100"
-            onChange={(e) => setPrice(e.target.value)}
-          />
+          <p style={{fontSize: 13, marginBottom: 4, fontWeight: 700}}>Consumed at</p>
+          <div style={{ width: "100%", marginBottom: 20 }}>
+            <DatePicker
+              className={{ width: "100%", marginBottom: 20 }}
+              selected={consumedAt}
+              onChange={(date) => setConsumedAt(date)}
+              showTimeSelect
+              dateFormat="Pp"
+            />
+          </div>
           <Form.Button primary type="submit" loading={isLoading}>
             Create food entry
           </Form.Button>

@@ -24,6 +24,7 @@ class AdminFoodStatisticsController < ApplicationController
 
   def last_week_average_calories_per_user_count
     user_to_average_calouries_mapping = {}
+    weekly_user_calories = []
     User.all.each do |user|
       foods = FoodEntry.where(user_id: user.id).where('created_at >= ?', 1.week.ago)
       calories = 0
@@ -33,8 +34,9 @@ class AdminFoodStatisticsController < ApplicationController
 
       seven_day_average = calories / 7
       user_to_average_calouries_mapping[user.id] = seven_day_average
+      weekly_user_calories << calories
     end
 
-    user_to_average_calouries_mapping
+    weekly_user_calories.reduce(:+) / User.count
   end
 end
