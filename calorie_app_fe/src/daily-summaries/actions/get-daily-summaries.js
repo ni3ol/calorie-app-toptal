@@ -1,16 +1,17 @@
 import Axios from "axios";
+import { USER_ID } from "src/utils/user";
 
 export const getDailySummaries = async () => {
-  return [
-    {
-      createdAt: "2021-07-24",
-      calorieLimit: 2100,
-      calorieAmount: 2200,
+  const {
+    data: { daily_calorie_amount_per_day: dailyCalorieAmountPerDay, daily_calorie_limit: dailyCalorieLimit },
+  } = await Axios.get("http://localhost:3000/daily_summary", {
+    params: {
+      user_id: USER_ID
     },
-    {
-      createdAt: "2021-07-23",
-      calorieLimit: 2100,
-      calorieAmount: 2000,
+    headers: {
+      "Content-Type": "application/json",
     },
-  ];
+  });
+
+  return { dailyCalorieAmountPerDay, dailyCalorieLimit};
 };

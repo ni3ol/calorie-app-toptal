@@ -19,6 +19,12 @@ class FoodEntriesController < ApplicationController
     render json: { message: 'success' }
   end
 
+  def destroy
+    food_entry.destroy!
+
+    render json: { message: 'Food entry deleted' }
+  end
+
   private
 
   def food_entry_params
@@ -35,7 +41,7 @@ class FoodEntriesController < ApplicationController
     food_entry.map do |item|
       {
         id: item.id,
-        user_id: item.user_id,
+        userId: item.user_id,
         createdAt: item.created_at,
         name: item.name,
         consumedAt: item.consumed_at,

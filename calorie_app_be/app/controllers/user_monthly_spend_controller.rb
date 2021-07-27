@@ -15,7 +15,7 @@ class UserMonthlySpendController < ApplicationController
   end
 
   def month
-    Time.now.strftime('%B')
+    Time.now.strftime('%B %Y')
   end
 
   def monthly_spend_amount

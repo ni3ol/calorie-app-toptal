@@ -1,20 +1,30 @@
 import React, { useState } from "react";
-import { Button, Modal, Form, Message } from "semantic-ui-react";
+import { Modal, Form, Message } from "semantic-ui-react";
 import { usePromiseLazy } from "src/utils";
-import { createFoodEntry } from "../actions/create-food-entry";
+import { updateFoodEntry } from "../actions/update-food-entry";
 
-export const UpdateFoodEntryModal = ({ onClose, onFoodEntryUpdated, foodEntry }) => {
-  const [name, setName] = useState();
-  const [calories, setCalories] = useState();
-  const [consumedAt, setConsumedAt] = useState();
-  const [price, setPrice] = useState();
+export const UpdateFoodEntryModal = ({
+  onClose,
+  onFoodEntryUpdated,
+  foodEntry,
+}) => {
+  const [name, setName] = useState(foodEntry.name);
+  const [calories, setCalories] = useState(foodEntry.calories);
+  const [consumedAt, setConsumedAt] = useState(foodEntry.consumedAt);
+  const [price, setPrice] = useState(foodEntry.price);
 
   const {
     execute: wrappedUpdateFoodEntry,
     error,
     isLoading,
   } = usePromiseLazy(async () => {
-    console.log("Updating food entry");
+    return updateFoodEntry({
+      entryId: foodEntry.id,
+      name,
+      calories,
+      consumedAt,
+      price,
+    });
   }, []);
 
   const handleSubmit = async () => {
@@ -39,25 +49,25 @@ export const UpdateFoodEntryModal = ({ onClose, onFoodEntryUpdated, foodEntry })
             label="Food"
             placeholder="Banana"
             onChange={(e) => setName(e.target.value)}
-            value={foodEntry.name}
+            value={name}
           />
           <Form.Input
             label="Calories"
             placeholder="100"
             onChange={(e) => setCalories(e.target.value)}
-            value={foodEntry.calories}
+            value={calories}
           />
           <Form.Input
             label="Consumed at"
             placeholder="2021/08/21"
             onChange={(e) => setConsumedAt(e.target.value)}
-            value={foodEntry.consumedAt}
+            value={consumedAt}
           />
           <Form.Input
             label="Price"
             placeholder="100"
             onChange={(e) => setPrice(e.target.value)}
-            value={foodEntry.price}
+            value={price}
           />
           <Form.Button primary type="submit" loading={isLoading}>
             Update food entry

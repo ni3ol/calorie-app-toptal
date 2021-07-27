@@ -1,4 +1,7 @@
+import axios from "axios";
 import { useState, useCallback, useEffect } from "react";
+
+export const authToken = "some-auth-token";
 
 export const usePromiseLazy = (f, deps) => {
   const [state, setState] = useState({
@@ -41,4 +44,18 @@ export const usePromise = (f, deps) => {
     execute();
   }, [...deps]);
   return { execute, result, setResult, isLoading, error };
+};
+
+export const apiRequest = async ({ method, url, body, params }) => {
+  const response = await axios.post("http://localhost:3000/food_entries", {
+    url,
+    body,
+    params,
+    headers: {
+      "Content-Type": "application/json",
+      Authentication: "Bearer some-auth-token",
+    },
+  });
+
+  return response;
 };

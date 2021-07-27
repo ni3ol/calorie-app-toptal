@@ -3,12 +3,13 @@ import { Modal, Form, Message } from "semantic-ui-react";
 import { usePromiseLazy } from "src/utils";
 import { createFoodEntry } from "../actions/create-food-entry";
 import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 
 export const NewFoodEntryModal = ({ onClose, onFoodEntryCreated }) => {
   const [name, setName] = useState();
   const [calories, setCalories] = useState();
   const [consumedAt, setConsumedAt] = useState(new Date());
+  const [isNameErrored, setIsNameErrored] = useState(false);
+  const [isCaloriesErrored, setIsCaloriesErrored] = useState(false);
 
   const {
     execute: wrappedCreateFoodEntry,
@@ -19,16 +20,26 @@ export const NewFoodEntryModal = ({ onClose, onFoodEntryCreated }) => {
       name,
       calories,
       consumedAt,
+      price: 0,
     });
 
     return newFoodEntry;
   }, []);
 
   const handleSubmit = async () => {
-    const { result: foodEntry } = await wrappedCreateFoodEntry();
+    const nameErrored = name === undefined || name === "";
+    if (nameErrored) setIsNameErrored(true);
 
-    if (foodEntry && onFoodEntryCreated) {
-      await onFoodEntryCreated(foodEntry);
+    const numCalories = Number.parseInt(calories);
+    const caloriesErrored = calories === undefined || numCalories <= 0;
+    if (caloriesErrored) setIsCaloriesErrored(true);
+
+    if (!caloriesErrored && !nameErrored) {
+      const { result: foodEntry } = await wrappedCreateFoodEntry();
+
+      if (foodEntry && onFoodEntryCreated) {
+        await onFoodEntryCreated(foodEntry);
+      }
     }
   };
 
@@ -45,14 +56,35 @@ export const NewFoodEntryModal = ({ onClose, onFoodEntryCreated }) => {
           <Form.Input
             label="Food"
             placeholder="Banana"
-            onChange={(e) => setName(e.target.value)}
+            onChange={(e) => {
+              setIsNameErrored(false);
+              setName(e.target.value);
+            }}
+            error={
+              isNameErrored && {
+                content: "Please enter a valid food name",
+                pointing: "below",
+              }
+            }
           />
           <Form.Input
             label="Calories"
             placeholder="100"
-            onChange={(e) => setCalories(e.target.value)}
+            type="number"
+            onChange={(e) => {
+              setIsCaloriesErrored(false);
+              setCalories(e.target.value);
+            }}
+            error={
+              isCaloriesErrored && {
+                content: "Please enter a calorie amount",
+                pointing: "below",
+              }
+            }
           />
-          <p style={{fontSize: 13, marginBottom: 4, fontWeight: 700}}>Consumed at</p>
+          <p style={{ fontSize: 13, marginBottom: 4, fontWeight: 700 }}>
+            Consumed at
+          </p>
           <div style={{ width: "100%", marginBottom: 20 }}>
             <DatePicker
               className={{ width: "100%", marginBottom: 20 }}

@@ -1,14 +1,39 @@
 class AdminFoodStatisticsController < ApplicationController
   def index
     render json: {
+      last_week_date_range: last_week_date_range,
+      two_weeks_ago_date_range: two_weeks_ago_date_range,
+      current_date: current_date,
       last_week_entries_count: last_week_entries_count,
       two_weeks_ago_entries_count: two_weeks_ago_entries_count,
       current_day_entries_count: current_day_entries_count,
-      last_week_average_calories_per_user_count: last_week_average_calories_per_user_count
+      average_calories_per_day: average_calories_per_day
     }
   end
 
   private
+
+  def last_week_date_range
+    start_week = format_date(Time.now - 7.days)
+    end_week = format_date(Time.now)
+
+    start_week + ' - ' + end_week
+  end
+
+  def two_weeks_ago_date_range
+    start_week = format_date(Time.now - 14.days)
+    end_week = format_date(Time.now - 7.days)
+
+    start_week + ' - ' + end_week
+  end
+
+  def current_date
+    format_date(Time.now)
+  end
+
+  def format_date(date)
+    date.strftime('%e %B %Y')
+  end
 
   def last_week_entries_count
     FoodEntry.where('created_at >= ?', 1.week.ago).count
@@ -22,21 +47,20 @@ class AdminFoodStatisticsController < ApplicationController
     FoodEntry.where('created_at >= ?', 1.day.ago).count
   end
 
-  def last_week_average_calories_per_user_count
-    user_to_average_calouries_mapping = {}
-    weekly_user_calories = []
-    User.all.each do |user|
-      foods = FoodEntry.where(user_id: user.id).where('created_at >= ?', 1.week.ago)
-      calories = 0
-      foods.each do |food|
-        calories += food.calories
-      end
+  def average_calories_per_day
+    average_calories_mapping = {}
 
-      seven_day_average = calories / 7
-      user_to_average_calouries_mapping[user.id] = seven_day_average
-      weekly_user_calories << calories
+    (0...7).map do |day|
+      date = day.days.ago
+
+      food_entries = FoodEntry.where(consumed_at: date.all_day)
+      calories = food_entries.map(&:calories).reduce(:+)
+
+      average_calories = food_entries.count == 0 ? 0 : calories / food_entries.count
+
+      average_calories_mapping[date] = average_calories
     end
 
-    weekly_user_calories.reduce(:+) / User.count
+    average_calories_mapping
   end
 end

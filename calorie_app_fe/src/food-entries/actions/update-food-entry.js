@@ -1,19 +1,30 @@
 import Axios from "axios";
+import { authToken } from "src/utils";
 
 export const updateFoodEntry = async ({
-  foodEntryId,
+  entryId,
+  name,
+  calories,
+  consumedAt,
   price,
 }) => {
-  const response = await Axios.patch(`http://localhost:3000/food_entries/${foodEntryId}`, {
-    params: {
-      price,
-    },
-    headers: {
-      "Content-Type": "application/json",
-    },
-  });
+  const response = await Axios.patch(
+    `http://localhost:3000/food_entries/${entryId}`,
+    {
+      params: {
+        name,
+        calories,
+        consumed_at: consumedAt,
+        price,
+      },
+      headers: {
+        "Content-Type": "application/json",
+        Authentication: authToken,
+      },
+    }
+  );
 
-  const priceFoodEntry = response.data;
+  const foodEntry = response.data;
 
-  return priceFoodEntry;
+  return foodEntry;
 };

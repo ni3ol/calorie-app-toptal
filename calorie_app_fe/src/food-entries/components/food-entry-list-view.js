@@ -12,10 +12,15 @@ import { FoodEntryTable } from "./food-entry-table";
 import { MonthlySpendSummaryTable } from "./monthly-spend-summary-table";
 import { NewFoodEntryModal } from "./new-food-entry-modal";
 import { UpdateFoodEntryModal } from "./update-food-entry-modal";
+import DatePicker from "react-datepicker";
+import { isAfter, isBefore } from "date-fns";
+import { USER_ID } from "src/utils/user";
 
 export const FoodEntryListView = () => {
   const [showNewFoodEntryModal, setShowNewFoodEntryModal] = useState(false);
   const [foodEntryIdToUpdate, setFoodEntryIdToUpdate] = useState();
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
 
   const { result: user } = usePromise(async () => {
     const user = await getUser();
@@ -28,7 +33,7 @@ export const FoodEntryListView = () => {
   }, []);
 
   const { result: foodEntries, execute } = usePromise(async () => {
-    const foodEntries = await getFoodEntries();
+    const foodEntries = await getFoodEntries({ user_id: USER_ID});
     return foodEntries;
   }, []);
 
@@ -42,8 +47,6 @@ export const FoodEntryListView = () => {
     return monthlySpendSummary;
   }, []);
 
-  console.log('ssss', monthlySpendSummary)
-
   const foodEntryToUpdate = foodEntries?.find(
     (foodEntry) => foodEntry.id === foodEntryIdToUpdate
   );
@@ -55,13 +58,13 @@ export const FoodEntryListView = () => {
           onClose={() => setShowNewFoodEntryModal(false)}
           onFoodEntryCreated={() => {
             execute();
+            setShowNewFoodEntryModal(false);
           }}
         />
       )}
       {foodEntryIdToUpdate && foodEntryToUpdate && (
         <UpdateFoodEntryModal
           onClose={() => {
-            setFoodEntryIdToUpdate(undefined);
             setFoodEntryIdToUpdate(undefined);
           }}
           foodEntry={foodEntryToUpdate}
@@ -74,7 +77,7 @@ export const FoodEntryListView = () => {
         {user?.isAdmin && <Link to="/admin">Go to admin page</Link>}
         <Grid columns={2}>
           <Grid.Column verticalAlign="middle">
-            <Header>Food entries</Header>
+            <Header size="huge">Food entries</Header>
           </Grid.Column>
           <Grid.Column textAlign="right">
             <Button primary onClick={() => setShowNewFoodEntryModal(true)}>
@@ -83,8 +86,53 @@ export const FoodEntryListView = () => {
           </Grid.Column>
         </Grid>
 
+        <Header>Filter by consumed at date:</Header>
+        <Segment
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <div>
+            From{" "}
+            <DatePicker
+              selected={startDate}
+              onChange={(date) => setStartDate(date)}
+            />{" "}
+          </div>
+          <div>
+            to{" "}
+            <DatePicker
+              selected={endDate}
+              onChange={(date) => setEndDate(date)}
+            />{" "}
+          </div>
+          <div>
+            <Button
+              onClick={() => {
+                setEndDate(undefined);
+                setStartDate(undefined);
+              }}
+            >
+              Clear filters
+            </Button>
+          </div>
+        </Segment>
+
         <FoodEntryTable
-          entries={foodEntries || []}
+          entries={(foodEntries || [])
+            .filter((entry) => {
+              return startDate
+                ? isAfter(new Date(entry.consumedAt), new Date(startDate))
+                : true;
+            })
+            .filter((entry) => {
+              return endDate
+                ? isBefore(new Date(entry.consumedAt), new Date(endDate))
+                : true;
+            })}
           onEditClick={(foodEntryId) => {
             setFoodEntryIdToUpdate(foodEntryId);
           }}
@@ -95,7 +143,7 @@ export const FoodEntryListView = () => {
             <Header>Monthly summary</Header>
           </Grid.Column>
         </Grid>
-        <MonthlySpendSummaryTable entry={monthlySpendSummary || []}/>
+        <MonthlySpendSummaryTable entry={monthlySpendSummary || []} />
 
         <Grid columns={2}>
           <Grid.Column verticalAlign="middle">
@@ -105,7 +153,7 @@ export const FoodEntryListView = () => {
         <p>
           Calorie limit: <b>{calorieLimit}</b>
         </p>
-        <DailySummaryTable entries={dailySummaries || []} />
+        <DailySummaryTable summary={dailySummaries || []} />
       </Container>
     </>
   );
