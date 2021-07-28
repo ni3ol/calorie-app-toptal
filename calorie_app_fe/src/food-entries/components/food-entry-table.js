@@ -53,6 +53,7 @@ export const FoodEntryTable = ({ isAdmin, entries, onEditClick, onDelete }) => {
       <Table.Header>
         <Table.Row>
           <Table.HeaderCell>Created at</Table.HeaderCell>
+          <Table.HeaderCell>Updated at</Table.HeaderCell>
           <Table.HeaderCell>Food</Table.HeaderCell>
           <Table.HeaderCell>Calories</Table.HeaderCell>
           <Table.HeaderCell>Consumed at</Table.HeaderCell>
@@ -69,6 +70,7 @@ export const FoodEntryTable = ({ isAdmin, entries, onEditClick, onDelete }) => {
         {entries.map((entry, index) => (
           <Table.Row key={index}>
             <Table.Cell>{format(new Date(entry.createdAt), "PPpp")}</Table.Cell>
+            <Table.Cell>{format(new Date(entry.updatedAt), "PPpp")}</Table.Cell>
             <Table.Cell>{entry.name}</Table.Cell>
             <Table.Cell>{entry.calories}</Table.Cell>
             <Table.Cell>
@@ -81,10 +83,10 @@ export const FoodEntryTable = ({ isAdmin, entries, onEditClick, onDelete }) => {
               <>
                 <Table.Cell>{entry.userId}</Table.Cell>
                 <Table.Cell>
-                  <Button color="teal" onClick={() => onEditClick(entry)}>
+                  <Button size="small" color="teal" onClick={() => onEditClick(entry)}>
                     Update
                   </Button>
-                  <Button color="red" onClick={() => onDelete(entry)}>
+                  <Button size="small" color="red" onClick={() => onDelete(entry)}>
                     Delete
                   </Button>
                 </Table.Cell>

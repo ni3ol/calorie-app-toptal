@@ -53,7 +53,7 @@ class AdminFoodStatisticsController < ApplicationController
   end
 
   def current_day_entries_count
-    FoodEntry.where('created_at >= ?', 1.day.ago).count
+    FoodEntry.where('created_at >= ?', Time.now.beginning_of_day).count
   end
 
   def average_calories_per_day

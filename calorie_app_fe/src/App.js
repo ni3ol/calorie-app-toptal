@@ -29,7 +29,7 @@ function App() {
         path="/admin"
         component={AdminView}
         // change this value to check that user cannot login
-        userId={USER_ID}
+        userId={ADMIN_USER_ID}
       />
       <PrivateRoute
         exact

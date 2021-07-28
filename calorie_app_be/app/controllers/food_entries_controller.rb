@@ -1,5 +1,6 @@
 class FoodEntriesController < ApplicationController
-  before_action :authenticate
+  skip_before_action :verify_authenticity_token, except: [:index]
+  before_action :authenticate, except: [:create, :update, :destroy]
 
   def index
     render json: {
@@ -47,13 +48,14 @@ class FoodEntriesController < ApplicationController
   end
 
   def food_entries
-    food_entry = params[:user_id] ? FoodEntry.where(user_id: params[:user_id]) : FoodEntry.all.order('created_at DESC')
+    food_entry = user.is_admin ? FoodEntry.all : FoodEntry.where(user_id: user.id)
 
-    food_entry.map do |item|
+    food_entry.order('updated_at DESC').map do |item|
       {
         id: item.id,
         userId: item.user_id,
         createdAt: item.created_at,
+        updatedAt: item.updated_at,
         name: item.name,
         consumedAt: item.consumed_at,
         calories: item.calories,

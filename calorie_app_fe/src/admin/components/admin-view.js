@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import { Button, Container, Grid, Header } from "semantic-ui-react";
+import React, { useState } from "react";
+import { Button, Container, Grid, Header, Segment } from "semantic-ui-react";
 import { getFoodEntries } from "src/food-entries/actions/get-food-entries";
 import { FoodEntryTable } from "src/food-entries/components/food-entry-table";
 import { AdminFoodEntryStatistics } from "../components/admin-food-entry-statistics";
@@ -9,17 +9,15 @@ import { NewFoodEntryModal } from "src/food-entries/components/new-food-entry-mo
 import { deleteFoodEntry } from "src/food-entries/actions/delete-food-entry";
 import { AdminAverageCalorieTable } from "./admin-average-calorie-table";
 import { UpdateFoodEntryModal } from "src/food-entries/components/update-food-entry-modal";
-import { ADMIN_USER_ID, USER_ID } from "src/utils/user";
+import { ADMIN_USER_ID } from "src/utils/user";
+import DatePicker from "react-datepicker";
+import { isAfter, isBefore } from "date-fns";
 
 export const AdminView = (props) => {
   const [showNewFoodEntryModal, setShowNewFoodEntryModal] = useState(false);
   const [foodEntryToUpdate, setFoodEntryToUpdate] = useState();
-
-  // useEffect(() => {
-  //   if (USER_ID !== ADMIN_USER_ID) {
-  //     props.history.push('/')
-  //   }
-  // })
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
 
   const { result: foodEntries, execute } = usePromise(async () => {
     const foodEntries = await getFoodEntries({ user_id: ADMIN_USER_ID});
@@ -32,15 +30,15 @@ export const AdminView = (props) => {
   }, []);
 
   const { execute: wrappedDeleteFoodEntry } = usePromiseLazy(
-    async (entryId) => {
-      await deleteFoodEntry(entryId);
+    async (entry) => {
+      await deleteFoodEntry(entry.id);
       await execute();
     },
     []
   );
 
   return (
-    <Container>
+    <Container style={{padding: 20}}>
       {showNewFoodEntryModal && (
         <NewFoodEntryModal
           onClose={() => setShowNewFoodEntryModal(false)}
@@ -83,9 +81,53 @@ export const AdminView = (props) => {
         New food entry
       </Button>
       <Header>All food entries:</Header>
+      <Header>Filter by consumed at date:</Header>
+        <Segment
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "space-between",
+            alignItems: "center",
+          }}
+        >
+          <div>
+            From{" "}
+            <DatePicker
+              selected={startDate}
+              onChange={(date) => setStartDate(date)}
+            />{" "}
+          </div>
+          <div>
+            to{" "}
+            <DatePicker
+              selected={endDate}
+              onChange={(date) => setEndDate(date)}
+            />{" "}
+          </div>
+          <div>
+            <Button
+              onClick={() => {
+                setEndDate(undefined);
+                setStartDate(undefined);
+              }}
+            >
+              Clear filters
+            </Button>
+          </div>
+        </Segment>
       <FoodEntryTable
         isAdmin
-        entries={foodEntries || []}
+        entries={(foodEntries || [])
+          .filter((entry) => {
+            return startDate
+              ? isAfter(new Date(entry.consumedAt), new Date(startDate))
+              : true;
+          })
+          .filter((entry) => {
+            return endDate
+              ? isBefore(new Date(entry.consumedAt), new Date(endDate))
+              : true;
+          })}
         onDelete={(entry) => {
           wrappedDeleteFoodEntry(entry);
         }}
