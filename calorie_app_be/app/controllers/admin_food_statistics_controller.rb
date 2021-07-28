@@ -65,7 +65,7 @@ class AdminFoodStatisticsController < ApplicationController
       food_entries = FoodEntry.where(consumed_at: date.all_day)
       calories = food_entries.map(&:calories).reduce(:+)
 
-      average_calories = food_entries.count == 0 ? 0 : calories / food_entries.count
+      average_calories = food_entries.count.zero? ? 0 : calories / food_entries.count
 
       average_calories_mapping[date] = average_calories
     end
