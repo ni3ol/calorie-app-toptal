@@ -1,4 +1,5 @@
 import Axios from "axios";
+import { authToken } from "src/utils";
 
 export const updateFoodEntryPrice = async ({
   foodEntryId,
@@ -10,6 +11,7 @@ export const updateFoodEntryPrice = async ({
     },
     headers: {
       "Content-Type": "application/json",
+      'Authorization': authToken,
     },
   });
 

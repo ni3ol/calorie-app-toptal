@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState, useCallback, useEffect } from "react";
 
-export const authToken = "some-auth-token";
+export const authToken = "Token secret";
 
 export const usePromiseLazy = (f, deps) => {
   const [state, setState] = useState({

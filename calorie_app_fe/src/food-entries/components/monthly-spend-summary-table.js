@@ -17,8 +17,8 @@ export const MonthlySpendSummaryTable = ({ entry }) => {
       <Table.Body>
         <Table.Row>
           <Table.Cell>{entry.month}</Table.Cell>
-          <Table.Cell>{entry.monthlySpendLimit}</Table.Cell>
-          <Table.Cell>{entry.monthlySpendAmount}</Table.Cell>
+          <Table.Cell>$ {entry.monthlySpendLimit}</Table.Cell>
+          <Table.Cell>$ {entry.monthlySpendAmount}</Table.Cell>
           <Table.Cell negative={spendExceeded} positive={!spendExceeded}>
             {spendExceeded ? "Yes" : "No"}
           </Table.Cell>

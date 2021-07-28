@@ -1,4 +1,7 @@
 class AdminFoodStatisticsController < ApplicationController
+  before_action :authenticate
+  USER_TOKEN = 'secret'
+
   def index
     render json: {
       last_week_date_range: last_week_date_range,
@@ -12,6 +15,12 @@ class AdminFoodStatisticsController < ApplicationController
   end
 
   private
+
+  def authenticate
+    authenticate_or_request_with_http_token do |token, _options|
+      ActiveSupport::SecurityUtils.secure_compare(token, USER_TOKEN)
+    end
+  end
 
   def last_week_date_range
     start_week = format_date(Time.now - 7.days)

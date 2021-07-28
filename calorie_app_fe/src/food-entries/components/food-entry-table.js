@@ -41,7 +41,7 @@ const GetOrSetPrice = ({ foodEntryId, entryPrice }) => {
     </Form>
   ) : (
     <>
-      {price || entryPrice}
+      $ {price || entryPrice}
       <Button color="teal" basic floated="right" icon="edit" onClick={() => setFormVisible(true)}/>
     </>
   );

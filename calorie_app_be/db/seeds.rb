@@ -6,8 +6,8 @@
 # FoodEntry.all.each do |u| u.destroy! end
 
 # Create users
-User.create!(name: 'Nicol', email: 'nvojacek@gmail.com', daily_calorie_limit: 2000, monthly_spend_limit: 1000, is_admin: true)
-User.create!(name: 'Jason', email: 'jason@gmail.com', daily_calorie_limit: 2500, monthly_spend_limit: 1500)
+User.create!(name: 'Nicol', email: 'nvojacek@gmail.com', daily_calorie_limit: 2100, monthly_spend_limit: 1000, is_admin: true, token: 'secret')
+User.create!(name: 'Jason', email: 'jason@gmail.com', daily_calorie_limit: 2100, monthly_spend_limit: 1000, token: 'secret')
 
 admin_user_id = User.where(name: 'Nicol').first.id
 user_id = User.where(name: 'Jason').first.id

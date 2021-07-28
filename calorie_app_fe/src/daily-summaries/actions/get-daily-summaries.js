@@ -1,4 +1,5 @@
 import Axios from "axios";
+import { authToken } from "src/utils";
 import { USER_ID } from "src/utils/user";
 
 export const getDailySummaries = async () => {
@@ -10,6 +11,7 @@ export const getDailySummaries = async () => {
     },
     headers: {
       "Content-Type": "application/json",
+      "Authorization": authToken,
     },
   });
 

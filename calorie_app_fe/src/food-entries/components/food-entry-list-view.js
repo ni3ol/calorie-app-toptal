@@ -1,8 +1,7 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
 import { Button, Container, Grid, Header, Segment } from "semantic-ui-react";
 import { getDailySummaries } from "src/daily-summaries/actions/get-daily-summaries";
-import { getUser } from "src/users/actions/get-user";
+// import { getUser } from "src/users/actions/get-user";
 import { usePromise } from "src/utils";
 import { getCalorieLimit } from "../actions/get-calorie-limit";
 import { getFoodEntries } from "../actions/get-food-entries";
@@ -22,10 +21,10 @@ export const FoodEntryListView = () => {
   const [startDate, setStartDate] = useState();
   const [endDate, setEndDate] = useState();
 
-  const { result: user } = usePromise(async () => {
-    const user = await getUser();
-    return user;
-  }, []);
+  // const { result: user } = usePromise(async () => {
+  //   const user = await getUser();
+  //   return user;
+  // }, []);
 
   const { result: dailySummaries } = usePromise(async () => {
     const dailySummaries = await getDailySummaries();
@@ -74,7 +73,7 @@ export const FoodEntryListView = () => {
         />
       )}
       <Container style={{ marginTop: 30 }}>
-        {user?.isAdmin && <Link to="/admin">Go to admin page</Link>}
+        {/* {user?.isAdmin && <Link to="/admin">Go to admin page</Link>} */}
         <Grid columns={2}>
           <Grid.Column verticalAlign="middle">
             <Header size="huge">Food entries</Header>

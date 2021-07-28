@@ -1,4 +1,6 @@
 class UserLimitsController < ApplicationController
+  before_action :authenticate
+
   def index
     if user.blank?
       render_not_found
@@ -12,6 +14,13 @@ class UserLimitsController < ApplicationController
   end
 
   private
+
+  def authenticate
+    authenticate_or_request_with_http_token do |token, _options|
+      user_token = user.token
+      ActiveSupport::SecurityUtils.secure_compare(token, user_token)
+    end
+  end
 
   def render_not_found
     render json: { error: 'User does not exist' }, status: :not_found

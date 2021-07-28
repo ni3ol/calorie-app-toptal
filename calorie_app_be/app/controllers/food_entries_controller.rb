@@ -1,5 +1,5 @@
 class FoodEntriesController < ApplicationController
-  skip_before_action :verify_authenticity_token
+  before_action :authenticate
 
   def index
     render json: {
@@ -26,6 +26,17 @@ class FoodEntriesController < ApplicationController
   end
 
   private
+
+  def authenticate
+    authenticate_or_request_with_http_token do |token, _options|
+      user_token = user.token
+      ActiveSupport::SecurityUtils.secure_compare(token, user_token)
+    end
+  end
+
+  def user
+    User.where(id: params[:user_id]).first
+  end
 
   def food_entry_params
     params.require(:params).permit(:name, :user_id, :consumed_at, :calories, :price)

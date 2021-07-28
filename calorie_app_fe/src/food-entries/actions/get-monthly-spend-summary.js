@@ -1,4 +1,5 @@
 import Axios from "axios";
+import { authToken } from "src/utils";
 import { USER_ID } from "src/utils/user";
 
 export const getMonthlySpendSummary = async () => {
@@ -12,6 +13,7 @@ export const getMonthlySpendSummary = async () => {
     params: { user_id: USER_ID },
     headers: {
       "Content-Type": "application/json",
+      "Authorization": authToken,
     },
   });
 

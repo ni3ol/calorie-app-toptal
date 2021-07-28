@@ -19,7 +19,7 @@ export const updateFoodEntry = async ({
       },
       headers: {
         "Content-Type": "application/json",
-        Authentication: authToken,
+        "Authorization": authToken,
       },
     }
   );

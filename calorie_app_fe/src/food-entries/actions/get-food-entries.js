@@ -1,4 +1,5 @@
 import Axios from "axios";
+import { authToken } from "src/utils";
 
 export const getFoodEntries = async ({user_id}) => {
   const {
@@ -7,6 +8,7 @@ export const getFoodEntries = async ({user_id}) => {
     params: { user_id },
     headers: {
       "Content-Type": "application/json",
+      "Authorization": authToken,
     },
   });
 

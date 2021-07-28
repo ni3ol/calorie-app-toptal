@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Button, Container, Grid, Header } from "semantic-ui-react";
 import { getFoodEntries } from "src/food-entries/actions/get-food-entries";
 import { FoodEntryTable } from "src/food-entries/components/food-entry-table";
@@ -9,13 +9,20 @@ import { NewFoodEntryModal } from "src/food-entries/components/new-food-entry-mo
 import { deleteFoodEntry } from "src/food-entries/actions/delete-food-entry";
 import { AdminAverageCalorieTable } from "./admin-average-calorie-table";
 import { UpdateFoodEntryModal } from "src/food-entries/components/update-food-entry-modal";
+import { ADMIN_USER_ID, USER_ID } from "src/utils/user";
 
-export const AdminView = () => {
+export const AdminView = (props) => {
   const [showNewFoodEntryModal, setShowNewFoodEntryModal] = useState(false);
   const [foodEntryToUpdate, setFoodEntryToUpdate] = useState();
 
+  // useEffect(() => {
+  //   if (USER_ID !== ADMIN_USER_ID) {
+  //     props.history.push('/')
+  //   }
+  // })
+
   const { result: foodEntries, execute } = usePromise(async () => {
-    const foodEntries = await getFoodEntries('');
+    const foodEntries = await getFoodEntries({ user_id: ADMIN_USER_ID});
     return foodEntries;
   }, []);
 

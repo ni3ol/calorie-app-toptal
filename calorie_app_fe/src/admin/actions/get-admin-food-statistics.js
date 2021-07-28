@@ -1,4 +1,5 @@
 import Axios from "axios";
+import { authToken } from "src/utils";
 
 export const getAdminFoodStatistics = async () => {
   const {
@@ -6,6 +7,7 @@ export const getAdminFoodStatistics = async () => {
   } = await Axios.get("http://localhost:3000/admin_food_statistics", {
     headers: {
       "Content-Type": "application/json",
+      "Authorization": authToken,
     },
   });
 

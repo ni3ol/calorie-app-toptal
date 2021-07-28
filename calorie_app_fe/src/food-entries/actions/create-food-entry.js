@@ -17,7 +17,7 @@ export const createFoodEntry = async ({
     },
     headers: {
       "Content-Type": "application/json",
-      Authentication: authToken,
+      "Authorization": authToken,
     },
   });
 
