@@ -7,7 +7,7 @@ export const AdminFoodEntryStatistics = ({ statistics }) => {
       <Grid.Row>
       <Grid.Column>
           <Segment style={{textAlign: 'center'}}>
-            <Header>Last week</Header>
+            <Header>2 weeks ago</Header>
             <Header>{statistics.towWeeksAgoDateRange}</Header>
             <Header size="huge">{statistics.twoWeeksAgoEntriesCount}</Header>
           </Segment>
@@ -21,7 +21,7 @@ export const AdminFoodEntryStatistics = ({ statistics }) => {
         </Grid.Column>
         <Grid.Column>
           <Segment style={{textAlign: 'center'}}>
-            <Header>This week</Header>
+            <Header>Last week</Header>
             <Header>{statistics.lastWeekDateRange}</Header>
             <Header size="huge">{statistics.lastWeekEntriesCount}</Header>
           </Segment>

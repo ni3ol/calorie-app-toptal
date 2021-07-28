@@ -32,6 +32,8 @@ class UserMonthlySpendController < ApplicationController
       'created_at > ? AND created_at < ?',
       Time.now.beginning_of_month,
       Time.now.end_of_month
+    ).where(
+      user_id: user.id
     )
 
     food_entries.map { |food_entry| food_entry.price || 0 }.reduce(:+)

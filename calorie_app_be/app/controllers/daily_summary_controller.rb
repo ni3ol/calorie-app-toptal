@@ -30,7 +30,7 @@ class DailySummaryController < ApplicationController
   end
 
   def daily_calorie_amount_per_day
-    grouped_food_entries = food_entries.all.group_by { |u| u.consumed_at.beginning_of_day }
+    grouped_food_entries = food_entries.all.order('consumed_at DESC').group_by { |u| u.consumed_at.beginning_of_day }
 
     grouped_food_entries.each do |key, entries|
       calories = entries.map(&:calories).reduce(:+)
